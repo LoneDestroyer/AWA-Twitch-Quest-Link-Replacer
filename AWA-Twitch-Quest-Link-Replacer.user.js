@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        Replace Alienware Arena Control Centre Twitch Links
+// @name        AWA Twitch Quest Link Replacer
 // @description Replaces the Twitch Quest Links with a redirect to the popout so the Twitch Stream is not loaded. 
 // @author      Lone Destroyer
 // @license     CC0
@@ -9,8 +9,8 @@
 // @grant       GM_addStyle
 // @run-at      document-start
 // @namespace https://github.com/LoneDestroyer
-// @downloadURL https://raw.githubusercontent.com/LoneDestroyer/Replace-Alienware-Arena-Control-Centre-Twitch-Links/main/Replace%20Alienware%20Arena%20Control%20Centre%20Twitch%20Links.user.js
-// @updateURL https://raw.githubusercontent.com/LoneDestroyer/Replace-Alienware-Arena-Control-Centre-Twitch-Links/main/Replace%20Alienware%20Arena%20Control%20Centre%20Twitch%20Links.user.js
+// @downloadURL https://raw.githubusercontent.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/main/AWA-Twitch-Quest-Link-Replacer.user.js
+// @updateURL https://raw.githubusercontent.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/main/AWA-Twitch-Quest-Link-Replacer.user.js
 //Thanks to floriegl for version 1.0
 // ==/UserScript==
 

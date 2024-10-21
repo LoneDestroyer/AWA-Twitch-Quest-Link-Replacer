@@ -1,4 +1,4 @@
-# Replace Alienware Arena Control Center Twitch Links
+# AWA Twitch Quest Link Replacer
 Replaces the Twitch Quest Links with a redirect to the popout so the Twitch Stream is not loaded.
 
 
