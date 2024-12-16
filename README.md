@@ -16,7 +16,8 @@
 
 <!-- Install Help -->
 ## Installation
-
+> [!IMPORTANT]
+> Chromium browsers must enable Developer mode under `Settings > Extensions` to run UserScript Managers
 #### Step 1: ScriptManager
 * [Tampermonkey](https://www.tampermonkey.net/)
 * [Greasemonkey](https://violentmonkey.github.io/)
