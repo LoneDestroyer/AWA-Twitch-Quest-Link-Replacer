@@ -6,7 +6,7 @@
 // @match       https://*.alienwarearena.com/control-center
 // @match       https://*.twitch.tv/popout/*/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/component
 // @icon        https://github.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/blob/main/AWALogo.png?raw=true
-// @version     3.2
+// @version     3.3
 // @grant       GM_addStyle
 // @namespace https://github.com/LoneDestroyer
 // @downloadURL https://raw.githubusercontent.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/main/AWA-Twitch-Quest-Link-Replacer.user.js
@@ -60,5 +60,5 @@
                     // Redirect to the panel URL
                     window.location.href = panelURL;
         }
-    }, 1000);
+    }, 4000);
 })();
