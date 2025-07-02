@@ -2,11 +2,11 @@
 // @name        AWA Twitch Quest Link Replacer
 // @description Replaces the Twitch Quest Links with a redirect to the popout so the Twitch Stream is not loaded.
 // @author      Lone Destroyer
-// @license     CC0
+// @license     MIT
 // @match       https://*.alienwarearena.com/control-center
 // @match       https://*.twitch.tv/popout/*/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/component
 // @icon        https://github.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/blob/main/AWALogo.png?raw=true
-// @version     3.3
+// @version     3.31
 // @grant       GM_addStyle
 // @namespace https://github.com/LoneDestroyer
 // @downloadURL https://raw.githubusercontent.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/main/AWA-Twitch-Quest-Link-Replacer.user.js
@@ -51,14 +51,17 @@
     setInterval(function() {
         const currentURL = window.location.href;
         const title = document.title;
-        // Check if on the component page and the title of the tab is Twitch
-        if (currentURL.endsWith("component") && title !== "Arena Rewards Tracker - Twitch") {
-                    // Extract the channel ID from the URL
-                    const channelName = currentURL.split('/popout/')[1].split('/')[0];
-                    // Construct the panel URL
-                    const panelURL = `https://www.twitch.tv/popout/${channelName}/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/panel`;
-                    // Redirect to the panel URL
-                    window.location.href = panelURL;
+        const isComponentPage = currentURL.endsWith("component");
+        const hasPanel = document.querySelector('.extension-panel');
+
+        // Only redirect if on the component page, the title is not correct, and the ext panel is not present
+        if (isComponentPage && title !== "Arena Rewards Tracker - Twitch" && !hasPanel) {
+            // Extract the channel ID from the URL
+            const channelName = currentURL.split('/popout/')[1].split('/')[0];
+            // Construct the panel URL
+            const panelURL = `https://www.twitch.tv/popout/${channelName}/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/panel`;
+            // Redirect to the panel URL
+            window.location.href = panelURL;
         }
     }, 4000);
 })();

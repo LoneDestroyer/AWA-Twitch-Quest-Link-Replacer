@@ -6,13 +6,13 @@
   </a>
 
 <h3 align="center">AWA Twitch Quest Link Replacer</h3>
-
-  <p align="center"><strong>
-    Replaces the AWA Twitch Quest Links with a redirect to the popout. Twitch Stream is not loaded.</strong><br />
-    Will redirect to the correct page depending on if they are using the new or old method
-  </p>
 </div>
 
+<!-- Features -->
+## Features
+- Doesn't load Twitch Stream
+- Replaces the AWA Twitch Quest Links with a redirect to the popout
+- Checks popout if the Streamer is using the new or old version of AWA extension and redirects appropriatley
 
 <!-- Install Help -->
 ## Installation
