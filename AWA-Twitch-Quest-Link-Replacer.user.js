@@ -86,7 +86,7 @@
                     const img = div.querySelector('h5');
                     onlineStreamers.push(img.innerHTML);
                 });
-                console.log(`[AWA-Twitch-Quest-Link-Replacer LOG] List of online streamers`);
+                console.log(`[AWA-Twitch-Quest-Link-Replacer LOG] List of online streamers: `);
                 console.log(onlineStreamers);
                 checkIfOnline();
             }
@@ -100,9 +100,9 @@
         if (onlineStreamers.includes(channelName)) {
             console.log('%c%s', 'color:#00FF00',`[AWA-Twitch-Quest-Link-Replacer LOG] Current streamer is online.`);
         } else {
-            console.log('%c%s', 'color:#ff0000',`[AWA-Twitch-Quest-Link-Replacer LOG] Streamer is offline. Switching to an online streamer...`);
+            console.log('%c%s', 'color:#ff0000',`[AWA-Twitch-Quest-Link-Replacer LOG] Current streamer is offline. Switching to an online streamer...`);
             const onlineStreamer = onlineStreamers[Math.floor(Math.random() * onlineStreamers.length)];
-            console.log(`[Automation LOG] Switching to ${onlineStreamer}`);
+            console.log(`[AWA-Twitch-Quest-Link-Replacer LOG] Switching to ${onlineStreamer}`);
 
             window.location.href = `https://www.twitch.tv/popout/${onlineStreamer}/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/component`;
         }
