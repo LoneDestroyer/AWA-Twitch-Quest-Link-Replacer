@@ -11,8 +11,10 @@
 <!-- Features -->
 ## Features
 - Doesn't load Twitch Stream
-- Replaces the AWA Twitch Quest Links with a redirect to the popout
-- Checks popout if the Streamer is using the new or old version of AWA extension and redirects appropriatley
+- Changes AWA Quest Links to open the extension only
+- Picks the right extension view automatically (Component or Panel)
+- Automatically switches to a new streamer if the current one goes offline (*uses [AWA Twitch Live](https://www.alienwarearena.com/twitch/live)*)
+- Automatically switches to a 2x ARP Streamer when available
 
 <!-- Install Help -->
 ## Installation
@@ -23,8 +25,7 @@
 * [Greasemonkey](https://violentmonkey.github.io/)
 
 #### Step 2: UserScript
-* [Install](https://raw.githubusercontent.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/main/AWA-Twitch-Quest-Link-Replacer.user.js) *(Github)*
-
+* [Install](https://raw.githubusercontent.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/main/AWA-Twitch-Quest-Link-Replacer.user.js) *(via Github)*
 
 <!-- Screenshots -->
 ## Screenshots
