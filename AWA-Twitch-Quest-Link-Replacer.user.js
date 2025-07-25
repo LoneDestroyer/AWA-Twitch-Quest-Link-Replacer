@@ -6,7 +6,7 @@
 // @match       https://*.alienwarearena.com/control-center
 // @match       https://*.twitch.tv/popout/*/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/*
 // @icon        https://github.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/blob/main/AWALogo.png?raw=true
-// @version     3.4.1
+// @version     3.4.2
 // @grant       GM_addStyle
 // @grant       GM_xmlhttpRequest
 // @connect     alienwarearena.com
@@ -115,7 +115,7 @@
                         }
                     });
                     // Add manual entries and deduplicate/lowercase
-                    const manualDoubleARP = ["3llebelle", "alienware",]; // Names not shown on the AWA page but still eligible for 2x ARP
+                    const manualDoubleARP = ["3llebelle", "alienware", "hazeleyedchic",]; // Names not shown on the AWA page but still eligible for 2x ARP
                     const allDoubleARP = Array.from(new Set([...doubleARPNames, ...manualDoubleARP].map(n => n.toLowerCase())));
                     //console.log('[AWA-Twitch-Quest-Link-Replacer] 2x ARP streamers:', allDoubleARP); // Uncomment for debugging
                     if (typeof callback === 'function') callback(allDoubleARP);
