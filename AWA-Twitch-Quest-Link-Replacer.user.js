@@ -6,49 +6,32 @@
 // @match       https://*.alienwarearena.com/control-center
 // @match       https://*.twitch.tv/popout/*/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/*
 // @icon        https://github.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/blob/main/AWALogo.png?raw=true
-// @version     3.4.2
-// @grant       GM_addStyle
+// @version     3.5.0
 // @grant       GM_xmlhttpRequest
 // @connect     alienwarearena.com
 // @namespace   https://github.com/LoneDestroyer
 // @downloadURL https://raw.githubusercontent.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/main/AWA-Twitch-Quest-Link-Replacer.user.js
 // @updateURL   https://raw.githubusercontent.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/main/AWA-Twitch-Quest-Link-Replacer.user.js
 // ==/UserScript==
-// Thanks to floriegl for version 1.0
 
 (function() {
-    let css = `
-    .user-profile__profile-card:has( > .user-profile__card-header #control-center__twitch-max-reached) .quest-list__play {
-        display: none;
-    }
-    .user-profile__profile-card:has( > .user-profile__card-header #control-center__twitch-max-reached) .converted > .quest-list__play {
-        display: inline-block;
-    }`;
-        if (typeof GM_addStyle !== "undefined") {
-            GM_addStyle(css);
-        }
-        else {
-            let styleNode = document.createElement("style");
-            styleNode.appendChild(document.createTextNode(css));
-            (document.querySelector("head") || document.documentElement).appendChild(styleNode);
-        }
-        let x = 0;
-        const intervalID = setInterval(function () {
-            const foundLinks = document.querySelectorAll(".user-profile__profile-card:has( > .user-profile__card-header #control-center__twitch-max-reached) a:has( > .quest-list__play)");
-            if (foundLinks.length) {
-                window.clearInterval(intervalID);
-                for (const foundLink of foundLinks) {
-                    const convertedLink = (foundLink.href.match(/(?:https?:\/\/)?(?:www\.)?twitch\.tv\/([^\/?]+)/) || [])[1];
-                    if (convertedLink != null) {
-                        foundLink.href = "https://www.twitch.tv/popout/" + convertedLink + "/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/component";
-                        foundLink.classList.add("converted");
-                    }
-                }
+    // Replaces Twitch stream links on the Control Center with a popout redirect
+    // Prevents loading the Twitch stream in the background
+    function replaceTwitchQuestLinks() {
+        document.querySelectorAll("a[href*='twitch.tv']:has(.quest-list__play):not([data-awa-converted])").forEach(link => {
+            const channel = (link.href.match(/twitch\.tv\/([^\/?#]+)/) || [])[1];
+            if (channel) {
+                link.href = `https://www.twitch.tv/popout/${channel}/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/component`;
+                link.dataset.awaConverted = "1";
             }
-        if (++x === 20) {
-            window.clearInterval(intervalID);
-        }
-        }, 500);
+        });
+    }
+
+    replaceTwitchQuestLinks();
+    const observer = new MutationObserver(mutations => {
+        if (mutations.some(m => m.addedNodes.length > 0)) replaceTwitchQuestLinks();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 
     // Only run streamer automation on Twitch extension popout pages
     if (window.location.hostname.endsWith("twitch.tv") && window.location.pathname.includes("/popout/")) {

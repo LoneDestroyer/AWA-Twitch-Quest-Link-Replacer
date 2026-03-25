@@ -16,6 +16,10 @@
 - Automatically switches to a new streamer if the current one goes offline (*uses [AWA Twitch Live](https://www.alienwarearena.com/twitch/live)*)
 - Automatically switches to a 2x ARP Streamer when available
 
+### <u>Upcoming Features</u>
+
+- Adding ASF support for Steam and community events
+
 <!-- Install Help -->
 ## Installation
 > [!IMPORTANT]
@@ -53,4 +57,4 @@
 <!-- Acknowledgements -->
 ## Acknowledgements
 
- - [Replace Alienware Arena Control Center Twitch links](https://greasyfork.org/en/scripts/493363-replace-alienware-arena-control-center-twitch-links)
+ - Inspired by [Replace Alienware Arena Control Center Twitch links](https://greasyfork.org/en/scripts/493363-replace-alienware-arena-control-center-twitch-links). This is a rewrite with expanded features
