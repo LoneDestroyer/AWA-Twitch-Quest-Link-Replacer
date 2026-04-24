@@ -6,7 +6,7 @@
 // @match       https://*.alienwarearena.com/control-center
 // @match       https://*.twitch.tv/popout/*/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/*
 // @icon        https://github.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/blob/main/AWALogo.png?raw=true
-// @version     3.6.0
+// @version     3.6.1
 // @grant       GM_xmlhttpRequest
 // @connect     alienwarearena.com
 // @namespace   https://github.com/LoneDestroyer
@@ -52,20 +52,21 @@
         // Streamer Automation
         const CHECK_INTERVAL = 10 * 60 * 1000; // 10 mins
         const TIERS = [
-            ['hive', 'Hive', /Hive|Featured/i],
+            ['featured', 'Featured', /Featured/i],
+            ['hive', 'Hive', /Hive/i],
             ['nexus', 'Nexus', /Nexus/i],
-            ['partner', 'Partner', /Partner/i]
+            ['partners', 'Partners', /Partners/i]
         ];
         const pickRandom = arr => arr[Math.floor(Math.random() * arr.length)];
 
-        // Get live quest streamers from the AWA quests page, grouped by tier (Hive > Nexus > Partner)
+        // Get live quest streamers from the AWA quests page, grouped by tier (Featured > Hive > Nexus > Partners)
         function getQuestStreamers(callback) {
             GM_xmlhttpRequest({
                 method: 'GET',
                 url: 'https://www.alienwarearena.com/quests',
                 onload: function(response) {
                     const tempDiv = document.createElement('div');
-                    const tierSets = { hive: new Set(), nexus: new Set(), partner: new Set() };
+                    const tierSets = { featured: new Set(), hive: new Set(), nexus: new Set(), partners: new Set() };
                     tempDiv.innerHTML = response.responseText;
 
                     tempDiv.querySelectorAll('.user-profile__profile-card').forEach(section => {
@@ -96,12 +97,12 @@
                 },
                 onerror: function() {
                     console.log('%c%s', 'color:#ff0000', '[AWA-Twitch-Quest-Link-Replacer] Failed to fetch quest streamers.');
-                    callback({ hive: [], nexus: [], partner: [] });
+                    callback({ featured: [], hive: [], nexus: [], partners: [] });
                 }
             });
         }
 
-        // Redirect to the highest tier available (Hive > Nexus > Partner)
+        // Redirect to the highest tier available (Featured > Hive > Nexus > Partners)
         function checkAndRedirect(questStreamers) {
             const bestTier = TIERS.find(([key]) => questStreamers[key].length > 0);
             if (!bestTier) {
