@@ -6,7 +6,7 @@
 // @match       https://*.alienwarearena.com/control-center
 // @match       https://*.twitch.tv/popout/*/extensions/ehc5ey5g9hoehi8ys54lr6eknomqgr/*
 // @icon        https://github.com/LoneDestroyer/AWA-Twitch-Quest-Link-Replacer/blob/main/AWALogo.png?raw=true
-// @version     3.6.1
+// @version     3.6.2
 // @grant       GM_xmlhttpRequest
 // @connect     alienwarearena.com
 // @namespace   https://github.com/LoneDestroyer
@@ -38,7 +38,7 @@
         const currentURL = window.location.href;
         const channelName = currentURL.split('/popout/')[1].split('/')[0].toLowerCase();
         const isComponentPage = currentURL.endsWith("component");
-        
+
         function checkAndRedirectPanel() {
             const title = document.title;
             const hasPanel = document.querySelector('.extension-panel');
@@ -51,22 +51,16 @@
 
         // Streamer Automation
         const CHECK_INTERVAL = 10 * 60 * 1000; // 10 mins
-        const TIERS = [
-            ['featured', 'Featured', /Featured/i],
-            ['hive', 'Hive', /Hive/i],
-            ['nexus', 'Nexus', /Nexus/i],
-            ['partners', 'Partners', /Partners/i]
-        ];
         const pickRandom = arr => arr[Math.floor(Math.random() * arr.length)];
 
-        // Get live quest streamers from the AWA quests page, grouped by tier (Featured > Hive > Nexus > Partners)
+        // Get live Twitch quest streamers from the AWA quests page, grouped by tiers
         function getQuestStreamers(callback) {
             GM_xmlhttpRequest({
                 method: 'GET',
                 url: 'https://www.alienwarearena.com/quests',
                 onload: function(response) {
                     const tempDiv = document.createElement('div');
-                    const tierSets = { featured: new Set(), hive: new Set(), nexus: new Set(), partners: new Set() };
+                    const questTiers = [];
                     tempDiv.innerHTML = response.responseText;
 
                     tempDiv.querySelectorAll('.user-profile__profile-card').forEach(section => {
@@ -74,8 +68,12 @@
                         if (!cardHeader?.textContent.includes('Watch Twitch')) return;
 
                         section.querySelectorAll('.card-table-heading').forEach(heading => {
-                            const tier = TIERS.find(([, , match]) => match.test(heading.textContent || ''))?.[0];
-                            if (!tier) return;
+                            const tierLabel = Array.from(heading.childNodes)
+                                .filter(node => node.nodeType === 3)
+                                .map(node => node.textContent.trim())
+                                .filter(Boolean)
+                                .join(' ') || heading.textContent.trim();
+                            const tier = { tierLabel, streamers: new Set() };
 
                             // Each heading is followed by its stream rows.
                             let row = heading.parentElement?.nextElementSibling;
@@ -83,47 +81,47 @@
                                 const channel = row.querySelector('.quest-list__stream-live')?.textContent.includes('LIVE')
                                     ? (row.querySelector('a[href*="twitch.tv/"]')?.getAttribute('href').match(/twitch\.tv\/([^\/\?]+)/i) || [])[1]?.toLowerCase()
                                     : '';
-                                if (channel) tierSets[tier].add(channel);
+                                if (channel) tier.streamers.add(channel);
                                 row = row.nextElementSibling;
                             }
+                            questTiers.push(tier);
                         });
                     });
 
-                    const questStreamers = Object.fromEntries(
-                        Object.entries(tierSets).map(([key, value]) => [key, [...value]])
-                    );
-                    //console.log('[AWA-Twitch-Quest-Link-Replacer] Twitch Quest streamers:', questStreamers); // Uncomment for debugging
-                    callback(questStreamers);
+                    callback(questTiers.map(({ tierLabel, streamers }) => ({
+                        tierLabel,
+                        streamers: [...streamers]
+                    })));
                 },
                 onerror: function() {
                     console.log('%c%s', 'color:#ff0000', '[AWA-Twitch-Quest-Link-Replacer] Failed to fetch quest streamers.');
-                    callback({ featured: [], hive: [], nexus: [], partners: [] });
+                    callback([]);
                 }
             });
         }
 
-        // Redirect to the highest tier available (Featured > Hive > Nexus > Partners)
-        function checkAndRedirect(questStreamers) {
-            const bestTier = TIERS.find(([key]) => questStreamers[key].length > 0);
+        // Redirect to the first tier with live streamers, following the quest page order.
+        function checkAndRedirect(questTiers) {
+            const bestTier = questTiers.find(({ streamers }) => streamers.length > 0);
             if (!bestTier) {
                 console.log('%c%s', 'color:#ff0000', '[AWA-Twitch-Quest-Link-Replacer] No Twitch quest streamers found. Try checking the AWA Control Center.');
                 return;
             }
 
-            const [tierKey, tierLabel] = bestTier;
+            const { tierLabel, streamers } = bestTier;
             // Stay on the current channel if it is already in the best available tier.
-            if (questStreamers[tierKey].includes(channelName)) {
+            if (streamers.includes(channelName)) {
                 console.log('%c%s', 'color:#00FF00', `[AWA-Twitch-Quest-Link-Replacer] Current streamer is already at best available tier (${tierLabel}).`);
             } else {
-                const target = pickRandom(questStreamers[tierKey]);
+                const target = pickRandom(streamers);
                 console.log(`[AWA-Twitch-Quest-Link-Replacer] Switching to ${tierLabel} streamer: ${target}`);
                 redirectToExtensionPage(target, "component");
             }
         }
 
         function refreshQuestRouting() {
-            getQuestStreamers(questStreamers => {
-                checkAndRedirect(questStreamers);
+            getQuestStreamers(questTiers => {
+                checkAndRedirect(questTiers);
                 if (isComponentPage) setTimeout(checkAndRedirectPanel, 4000);
             });
         }
